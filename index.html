@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BestOption PR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    #logo-container {
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #logo-container img {
+      max-height: 8vh;
+      max-width: 200px;
+      height: auto;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .floating-icon {
+      position: fixed;
+      bottom: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #1976d2;
+      color: white;
+      font-size: 28px;
+      text-align: center;
+      line-height: 60px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    #voiceBtn {
+      right: 90px;
+    }
+
+    #chatBtn {
+      right: 20px;
+    }
+
+    .assistant-modal {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 60px);
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 999;
+    }
+
+    .assistant-modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+  </style>
+
+  <!-- Retell Chat Widget Embed -->
+  <script
+    id="retell-widget"
+    src="https://dashboard.retellai.com/retell-widget.js"
+    type="module"
+    data-public-key="key_bcdc1584852da798e25943da143c"
+    data-agent-id="agent_53b912bbe2c1fc4f9ec0b900b3"
+    data-agent-version="1"
+    data-title="BestOption PR - CHAT"
+    data-logo-url="https://kiransangem2016.github.io/workspaces/BOPR/assets/bestoptionpr_logo.jpg"
+    data-color="#1976d2"
+  ></script>
+</head>
+<body>
+
+  <div id="logo-container">
+    <img src="assets/bestoptionpr_logo.jpg" alt="bestoptionpr_logo.jpg">
+  </div>
+
+  <div class="container">
+    <h1>Welcome to BestOption PR</h1>
+    <p>Interact with our Virtual Assistants by selecting one of the icons below.</p>
+  </div>
+
+  <!-- Floating Icons -->
+  <div id="voiceBtn" class="floating-icon" title="Voice Assistant">🎤</div>
+  <div id="chatBtn" class="floating-icon" title="Chat Assistant">💬</div>
+
+  <!-- Voice Assistant Modal -->
+  <div id="voiceModal" class="assistant-modal">
+    <button class="close-btn" onclick="document.getElementById('voiceModal').style.display='none'">Close ✖</button>
+    <iframe src="https://agency-dccql5.chat-dash.com/iframe/68820f2b675abb2635476b86" allow="microphone"></iframe>
+  </div>
+  <!-- Voice Assistant Script Loader -->
+  <script>
+  (function() {
+      if (window.chatWidgetScriptLoaded) return;
+      window.ChatWidgetConfig = {
+        projectId: "68820f2b675abb2635476b86", 
+      };
+
+      var chatWidgetScript = document.createElement("script");
+      chatWidgetScript.type = 'text/javascript';
+      chatWidgetScript.src = "https://storage.googleapis.com/cdwidget/dist/assets/js/main.js";
+      document.body.appendChild(chatWidgetScript);
+
+      window.chatWidgetScriptLoaded = true;
+  })();
+
+    // Event handlers
+    document.getElementById("voiceBtn").onclick = function () {
+      document.getElementById("voiceModal").style.display = "block";
+    };
+
+    document.getElementById("chatBtn").onclick = function () {
+      // Triggers Retell AI chat widget toggle (already floating)
+      const event = new CustomEvent("retell-toggle-chat");
+      window.dispatchEvent(event);
+    };
+  </script>
+
+</body>
+</html>
