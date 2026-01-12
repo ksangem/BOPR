@@ -1,159 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>BestOption Healthcare</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aculocity | AI Support Chat</title>
+
+  <!-- n8n Chat Widget CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+    :root{
+      --bg1:#070a12;
+      --bg2:#0b1630;
+      --card:#0f172a;
+      --card2:#111c36;
+      --text:#e5e7eb;
+      --muted:#a7b0c0;
+      --border:rgba(255,255,255,.10);
+      --accent:#60a5fa;
+      --accent2:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(96,165,250,.20), transparent 55%),
+        radial-gradient(900px 600px at 90% 20%, rgba(34,197,94,.16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
     }
 
-    #logo-container {
-      background: #fff;
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    header{
+      position:sticky;
+      top:0;
+      z-index:5;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,18,.70);
+      border-bottom:1px solid var(--border);
+    }
+    .nav{
+      max-width:1100px;
+      margin:0 auto;
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:220px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(34,197,94,.9), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(96,165,250,.9), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
+      border:1px solid var(--border);
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
+    .brand h1{
+      font-size:16px;
+      margin:0;
+      line-height:1.1;
+      letter-spacing:.3px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .nav-actions{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-decoration:none;
+      font-weight:600;
+      font-size:13px;
+      transition:.2s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); }
+    .btn.primary{
+      border-color: rgba(96,165,250,.40);
+      background: linear-gradient(135deg, rgba(96,165,250,.22), rgba(34,197,94,.12));
     }
 
-    #logo-container img {
-      max-height: 8vh;
-      max-width: 200px;
-      height: auto;
+    main{
+      max-width:1100px;
+      margin:0 auto;
+      padding:34px 18px 80px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:18px;
+    }
+    @media (max-width: 980px){
+      main{ grid-template-columns: 1fr; }
+      .nav{ flex-wrap:wrap; }
+      .brand{ min-width:auto; }
     }
 
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      text-align: center;
+    .hero{
+      padding:26px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(17,28,54,.60));
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(600px 280px at 15% 20%, rgba(96,165,250,.22), transparent 60%),
+        radial-gradient(520px 260px at 85% 35%, rgba(34,197,94,.20), transparent 60%);
+      pointer-events:none;
+    }
+    .hero > *{ position:relative; z-index:1; }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      font-size:12px;
+      color:var(--muted);
+      width:fit-content;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(34,197,94,.15);
+    }
+    .hero h2{
+      margin:14px 0 10px;
+      font-size:34px;
+      line-height:1.1;
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin:0;
+      color: var(--muted);
+      font-size:15px;
+      line-height:1.6;
+      max-width: 70ch;
+    }
+    .cta{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .hint{
+      margin-top:16px;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
     }
 
-    .floating-icon {
-      position: fixed;
-      bottom: 20px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #1976d2;
-      color: white;
-      font-size: 28px;
-      text-align: center;
-      line-height: 60px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      z-index: 1000;
+    .panel{ display:flex; flex-direction:column; gap:14px; }
+    .card{
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(15,23,42,.70), rgba(17,28,54,.55));
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
     }
-
-    #voiceBtn {
-      right: 90px;
+    .card h3{ margin:0 0 10px; font-size:15px; letter-spacing:.2px; }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
     }
-
-    #chatBtn {
-      right: 20px;
+    .item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
     }
-
-    .assistant-modal {
-      display: none;
-      position: fixed;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 60px);
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 999;
+    .icon{
+      width:34px; height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(96,165,250,.20), rgba(34,197,94,.14));
+      display:grid;
+      place-items:center;
+      flex:0 0 34px;
     }
+    .item b{ display:block; font-size:13px; margin-bottom:2px; }
+    .item span{ display:block; font-size:12px; color:var(--muted); line-height:1.45; }
 
-    .assistant-modal iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    footer{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 26px;
+      color: rgba(231,235,243,.65);
+      font-size:12px;
     }
+    footer .foot{
+      border-top:1px solid var(--border);
+      padding-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+    }
+    svg{ display:block }
 
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: red;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 10px;
-      cursor: pointer;
-      z-index: 1001;
+    /* Optional: ensure widget doesn't hide behind page elements */
+    .n8n-chat-widget, .n8n-chat, .n8n-chat-launcher {
+      z-index: 9999 !important;
     }
   </style>
-
-  <!-- Retell Chat Widget Embed -->
-  <script
-    id="retell-widget"
-    src="https://dashboard.retellai.com/retell-widget.js"
-    type="module"
-    data-public-key="key_bcdc1584852da798e25943da143c"
-    data-agent-id="agent_53b912bbe2c1fc4f9ec0b900b3"
-    data-agent-version="6"
-    data-title="BestOption Healthcare - CHAT"
-    data-logo-url="https://ksangem.github.io/workspaces/BOPR/assets/bestoptionpr_logo.jpg"
-    data-color="#1976d2"
-  ></script>
 </head>
+
 <body>
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Aculocity | AI Support</h1>
+          <p>UC1 Parts & Docs • UC2 BOM Automation • Powered by n8n</p>
+        </div>
+      </div>
 
-  <div id="logo-container">
-    <img src="assets/bestoptionpr_logo.jpg" alt="bestoptionpr_logo.jpg">
-  </div>
+      <div class="nav-actions">
+        <a class="btn" href="#how-it-works">How it works</a>
+        <a class="btn primary" href="#open-chat">Open Chat</a>
+      </div>
+    </div>
+  </header>
 
-  <div class="container">
-    <h1>Welcome to BestOption Healthcare</h1>
-    <p>Interact with our Virtual Assistants by selecting one of the icons below.</p>
-  </div>
+  <main>
+    <section class="hero" id="open-chat">
+      <div class="tag"><span class="dot"></span> Live Support Chat</div>
+      <h2>Ask about parts, compatibility, documents — or generate manufacturing BOMs.</h2>
+      <p>
+        This assistant supports two workflows:
+        <b>UC1</b> (Parts Catalog & Technical Documentation) and <b>UC2</b> (Order-to-Manufacturing BOM Automation).
+        For company news, it searches official public sources.
+      </p>
 
-  <!-- Floating Icons -->
-  <div id="voiceBtn" class="floating-icon" title="Voice Assistant">🎤</div>
-  <div id="chatBtn" class="floating-icon" title="Chat Assistant">💬</div>
+      <div class="cta">
+        <button class="btn primary" id="btnOpenChat" type="button">Open Chat</button>
+        <a class="btn" href="https://www.gvwgroup.com/news" target="_blank" rel="noopener">GVW Group News</a>
+      </div>
 
-  <!-- Voice Assistant Modal -->
-  <div id="voiceModal" class="assistant-modal">
-    <button class="close-btn" onclick="document.getElementById('voiceModal').style.display='none'">Close ✖</button>
-    <iframe src="https://agency-dccql5.chat-dash.com/iframe/689de54e3cdbfc44ac1d4c6e" allow="microphone"></iframe>
-  </div>
-  <!-- Voice Assistant Script Loader -->
-  <script>
-  (function() {
-      if (window.chatWidgetScriptLoaded) return;
-      window.ChatWidgetConfig = {
-        projectId: "689de54e3cdbfc44ac1d4c6e", 
-      };
+      <div class="hint" id="how-it-works">
+        <b>Try prompts like:</b>
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="kbd">Is PN-88007 active?</span>
+          <span class="kbd">Is PN-AX640 compatible with 6x4?</span>
+          <span class="kbd">Which service manual applies to Rear Axle Installation for Actros 2021?</span>
+          <span class="kbd">Generate BOM for Truck T-001 (mandatory eBOMs)</span>
+          <span class="kbd">Latest GVW Group announcements</span>
+        </div>
+      </div>
+    </section>
 
-      var chatWidgetScript = document.createElement("script");
-      chatWidgetScript.type = 'text/javascript';
-      chatWidgetScript.src = "https://storage.googleapis.com/cdwidget/dist/assets/js/main.js";
-      document.body.appendChild(chatWidgetScript);
+    <aside class="panel">
+      <div class="card">
+        <h3>What the assistant can do</h3>
+        <ul class="list">
+          <li class="item">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16M4 12h16M4 17h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <b>UC1 — Parts & Technical Docs</b>
+              <span>Parts status/supersession, compatibility checks, stock & lead time, VIN lookup, torque specs, document identification.</span>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 10l-9-7-9 7v10a2 2 0 002 2h14a2 2 0 002-2V10z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M9 22V12h6v10" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <b>UC2 — Manufacturing BOM Automation</b>
+              <span>Truck → eBOM mapping, mandatory vs optional eBOMs, pre-manufacturing BOM generation, part options and validations.</span>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 12a10 10 0 11-20 0 10 10 0 0120 0z" stroke="white" stroke-width="2"/>
+                <path d="M12 8v5l3 2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <b>Escalation via Email</b>
+              <span>If data is missing or you need human validation, the assistant can route your request via email.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-      window.chatWidgetScriptLoaded = true;
-  })();
+      <div class="card">
+        <h3>Privacy note</h3>
+        <p style="margin:0; color:var(--muted); font-size:12.5px; line-height:1.55;">
+          Please avoid sharing sensitive personal data in chat. For official follow-up or approvals,
+          the assistant can escalate via email.
+        </p>
+      </div>
+    </aside>
+  </main>
 
-    // Event handlers
-    document.getElementById("voiceBtn").onclick = function () {
-      document.getElementById("voiceModal").style.display = "block";
-    };
+  <footer>
+    <div class="foot">
+      <div>© <span id="year"></span> Aculocity • GVW Group</div>
+      <div style="opacity:.9;">Powered by n8n Chat Widget</div>
+    </div>
+  </footer>
 
-    document.getElementById("chatBtn").onclick = function () {
-      // Triggers Retell AI chat widget toggle (already floating)
-      const event = new CustomEvent("retell-toggle-chat");
-      window.dispatchEvent(event);
-    };
+  <!-- n8n Chat Widget Script -->
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    // ✅ Your production webhook URL
+    const WEBHOOK_URL = 'https://kiransangem.app.n8n.cloud/webhook/92c7f160-79bf-4d90-a446-0d2f998c6946/chat';
+
+    createChat({
+      webhookUrl: WEBHOOK_URL
+    });
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Attempt to open the widget when user clicks "Open Chat"
+    document.getElementById('btnOpenChat').addEventListener('click', () => {
+      const launcher =
+        document.querySelector('[data-testid="n8n-chat-launcher"]') ||
+        document.querySelector('.n8n-chat-launcher') ||
+        document.querySelector('button[aria-label*="chat" i]');
+
+      if (launcher) launcher.click();
+      else alert('Chat widget loaded. If you do not see it, verify the webhook URL and network access.');
+    });
   </script>
-
 </body>
-
 </html>
-
-
