@@ -12,8 +12,6 @@
     :root{
       --bg1:#070a12;
       --bg2:#0b1630;
-      --card:#0f172a;
-      --card2:#111c36;
       --text:#e5e7eb;
       --muted:#a7b0c0;
       --border:rgba(255,255,255,.10);
@@ -168,25 +166,6 @@
       flex-wrap:wrap;
       align-items:center;
     }
-    .hint{
-      margin-top:16px;
-      padding:14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      padding:2px 6px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-    }
 
     .panel{ display:flex; flex-direction:column; gap:14px; }
     .card{
@@ -244,10 +223,62 @@
     }
     svg{ display:block }
 
-    /* Optional: ensure widget doesn't hide behind page elements */
+    /* Ensure widget always stays on top */
     .n8n-chat-widget, .n8n-chat, .n8n-chat-launcher {
       z-index: 9999 !important;
     }
+
+    /* ============================= */
+    /* n8n Chat Widget Size Override */
+    /* ============================= */
+    .n8n-chat {
+      width: min(520px, 95vw) !important;
+      height: min(720px, 85vh) !important;
+      max-height: 85vh !important;
+      border-radius: 18px !important;
+    }
+    .n8n-chat-messages {
+      max-height: calc(85vh - 160px) !important;
+      overflow-y: auto !important;
+    }
+    .n8n-chat-input {
+      padding: 12px !important;
+    }
+    .n8n-chat-launcher {
+      width: 60px !important;
+      height: 60px !important;
+      border-radius: 50% !important;
+    }
+	.chat-layout {
+    margin: 0;
+    padding: 20px;
+    background: white;
+}
+.chat-layout .chat-header {
+   background: #fff !important;
+    color: #000;
+    gap: 0;
+    
+}
+.chat-layout .chat-header h1 {
+    font-size: 22px;
+    color: #000;
+	padding:0;
+	margin:0;
+}
+.chat-layout .chat-header p {
+    padding: 0;
+    margin: 0;
+}
+.chat-layout .chat-body {
+    background: #d1d9d9;
+}
+.chat-layout .chat-header {
+padding: 0;
+}
+.chat-layout {
+    padding: 15px;
+}
   </style>
 </head>
 
@@ -279,20 +310,9 @@
         For company news, it searches official public sources.
       </p>
 
-      <div class="cta">
+      <div class="cta" id="how-it-works">
         <button class="btn primary" id="btnOpenChat" type="button">Open Chat</button>
         <a class="btn" href="https://www.gvwgroup.com/news" target="_blank" rel="noopener">GVW Group News</a>
-      </div>
-
-      <div class="hint" id="how-it-works">
-        <b>Try prompts like:</b>
-        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
-          <span class="kbd">Is PN-88007 active?</span>
-          <span class="kbd">Is PN-AX640 compatible with 6x4?</span>
-          <span class="kbd">Which service manual applies to Rear Axle Installation for Actros 2021?</span>
-          <span class="kbd">Generate BOM for Truck T-001 (mandatory eBOMs)</span>
-          <span class="kbd">Latest GVW Group announcements</span>
-        </div>
       </div>
     </section>
 
@@ -359,17 +379,21 @@
   <script type="module">
     import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-    // ✅ Your production webhook URL
     const WEBHOOK_URL = 'https://kiransangem.app.n8n.cloud/webhook/92c7f160-79bf-4d90-a446-0d2f998c6946/chat';
 
     createChat({
-      webhookUrl: WEBHOOK_URL
+      webhookUrl: WEBHOOK_URL,
+      showWelcomeScreen: false,
+      initialMessages: [
+        {
+          role: 'assistant',
+          content: 'Hello! I’m Lina from Autocar. How can I help you today — parts, orders, or documentation?'
+        }
+      ]
     });
 
-    // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Attempt to open the widget when user clicks "Open Chat"
     document.getElementById('btnOpenChat').addEventListener('click', () => {
       const launcher =
         document.querySelector('[data-testid="n8n-chat-launcher"]') ||
